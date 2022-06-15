@@ -1,17 +1,19 @@
 import 'package:flutter/material.dart';
+//import 'package:flutter_neumorphic/flutter_neumorphic.dart';
 
 import 'package:google_fonts/google_fonts.dart';
-import 'package:overlay_support/overlay_support.dart';
-import 'package:provider/provider.dart';
-import 'package:badges/badges.dart';
 import 'package:intl/intl.dart';
-import 'package:xkcd/Controller/Providers/saved_comic_provider.dart';
+import 'package:badges/badges.dart';
+import 'package:share_plus/share_plus.dart';
+import 'package:provider/provider.dart';
+import 'package:overlay_support/overlay_support.dart';
 
+import 'package:xkcd/Controller/Providers/saved_comic_provider.dart';
+import 'package:xkcd/Controller/Services/shared_pref.dart';
 import 'package:xkcd/Model/all_comic.dart';
-import 'package:xkcd/View/Screens/explaination_sceen.dart';
 import 'package:xkcd/View/Widgets/custom_image_view.dart';
 import 'package:xkcd/View/Widgets/custom_round_button.dart';
-
+import 'package:xkcd/View/screens/explaination_sceen.dart';
 
 class CustomCardComic extends StatefulWidget {
   AllComic allComic;
@@ -27,7 +29,7 @@ class CustomCardComic extends StatefulWidget {
 }
 
 class _CustomCardComicState extends State<CustomCardComic> {
- 
+  SharedPref sharedPref = SharedPref();
   bool isFav = false;
   bool isExpanded = false;
 
@@ -35,12 +37,11 @@ class _CustomCardComicState extends State<CustomCardComic> {
   void initState() {
     // TODO: implement initState
     super.initState();
+
     setState(() {
       isFav =
           widget.savedComic.any((element) => element.id == widget.allComic.id);
     });
-
-   
 
     //context.read<IndexProvider>().
   }
@@ -167,7 +168,6 @@ class _CustomCardComicState extends State<CustomCardComic> {
             Container(
               width: widthMain * .8,
               decoration: BoxDecoration(
-                
                 borderRadius: BorderRadius.circular(14),
               ),
               child: ImageView(
@@ -225,7 +225,9 @@ class _CustomCardComicState extends State<CustomCardComic> {
                   CustomRoundButton(
                     icon: Icons.share,
                     onTap: () {
-                     
+                      Share.share(
+                        'Hey! Check out this comic > ${widget.allComic.sourceUrl}',
+                      );
                     },
                   ),
                 ],
