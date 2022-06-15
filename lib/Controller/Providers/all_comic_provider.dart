@@ -1,12 +1,13 @@
 import 'package:flutter/material.dart';
-import 'package:xkcd/Model/all_comic.dart';
 import 'package:xkcd/Controller/Services/api_client.dart';
 import 'package:xkcd/Model/all_comic.dart';
 
 class AllComicProvider with ChangeNotifier {
   bool _isLoading = true;
+  bool _isSearchMode = false;
 
   List<AllComic> _allComic = [];
+  List<AllComic> _searchedComics = [];
 
   ApiClient apiClient = ApiClient();
 
@@ -21,7 +22,14 @@ class AllComicProvider with ChangeNotifier {
 
   List<AllComic> get allComic => _allComic;
 
-  
+  List<AllComic> get searchedComics => _searchedComics;
+
+  bool get isSearchMode => _isSearchMode;
+
+  void setSearchMode(bool search) {
+    _isSearchMode = search;
+    notifyListeners();
+  }
 
   void getAllComic() {
     setLoading(true);
@@ -33,5 +41,40 @@ class AllComicProvider with ChangeNotifier {
     notifyListeners();
   }
 
+  
+
+ 
+  void getSearchedComics(String enteredKeyword) {
+    setLoading(true);
+    List<AllComic> results = [];
+    List<AllComic> tempList = [];
+    if (isNumeric(enteredKeyword)) {
+      int temp = int.parse(enteredKeyword);
+      results = _allComic.where((comic) => comic.id == temp).toList();
+      tempList = _allComic
+          .where((comic) =>
+              comic.title.toLowerCase().contains(enteredKeyword.toLowerCase()))
+          .toList();
+      results = results + tempList;
+    } else {
+      results = _allComic
+          .where((comic) =>
+              comic.title.toLowerCase().contains(enteredKeyword.toLowerCase()))
+          .toList();
+    }
+
+    _searchedComics = results;
+    setLoading(false);
+    notifyListeners();
+  }
+
+  void cleanSearchedComic() {
+    _searchedComics = [];
+    notifyListeners();
+  }
+
+   bool isNumeric(String s) {
+    return int.tryParse(s) != null;
+  }
 
 }

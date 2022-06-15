@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 
 import 'package:provider/provider.dart';
 
 import 'package:xkcd/Controller/Providers/all_comic_provider.dart';
+import 'package:xkcd/Controller/Providers/saved_comic_provider.dart';
+import 'package:xkcd/View/Widgets/custom_card_comic.dart';
 
 import 'package:xkcd/View/Widgets/custom_progress.dart';
 import 'package:xkcd/View/screens/browse_comics_screen.dart';
@@ -26,6 +29,7 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
     super.initState();
     Future.delayed(Duration.zero, () {
       context.read<AllComicProvider>().getAllComic();
+      context.read<SavedComicProvider>().getSavedComics();
      
 
       
@@ -39,7 +43,7 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
 
     var isLoading = context.watch<AllComicProvider>().isLoading;
     var allComic = context.watch<AllComicProvider>().allComic;
-
+     var savedComic = context.watch<SavedComicProvider>().savedComics;
     return Container(
       child: Scaffold(
         appBar: AppBar(),
@@ -57,8 +61,32 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
                               child: customProgressWidget(),
                             )
                           : BrowseComicScreen(
-                              allComic: allComic),
-                      Container(),
+                              allComic: allComic,
+                              savedComic: savedComic,
+                            ),
+                      Container(
+                        alignment: Alignment.center,
+                        //height: heightMain * .7,
+                        child: savedComic.isEmpty
+                            ? Container(
+                                child: Text(
+                                  "No Saved Comics",
+                                  style: GoogleFonts.barlow(
+                                      fontWeight: FontWeight.bold,
+                                      color: Colors.black),
+                                ),
+                              )
+                            : ListView.builder(
+                                //itemBuilder: _buildListItem,
+                                itemBuilder: ((p0, index) {
+                                  return CustomCardComic(
+                                    allComic: savedComic[index],
+                                    savedComic: savedComic,
+                                  );
+                                }),
+                                itemCount: savedComic.length,
+                              ),
+                      ),
                     ],
                   ),
       ),

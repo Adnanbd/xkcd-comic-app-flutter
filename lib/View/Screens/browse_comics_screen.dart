@@ -5,7 +5,8 @@ import 'package:xkcd/View/Widgets/custom_card_comic.dart';
 
 class BrowseComicScreen extends StatefulWidget {
   List<AllComic> allComic;
-  BrowseComicScreen({required this.allComic});
+  List<AllComic> savedComic;
+  BrowseComicScreen({required this.allComic, required this.savedComic});
 
   @override
   State<BrowseComicScreen> createState() => _BrowseComicScreenState();
@@ -25,7 +26,7 @@ class _BrowseComicScreenState extends State<BrowseComicScreen> {
         itemBuilder: ((p0, index) {
           return CustomCardComic(
                   allComic: widget.allComic[index],
-                  
+                  savedComic: widget.savedComic,
                 );
         }),
         itemCount: widget.allComic.length,

@@ -17,12 +17,10 @@ class ImageView extends StatelessWidget {
   Widget build(BuildContext context) {
     return FullScreenWidget(
       child: Container(
-        //height: heightMain * .5,
         width: double.infinity,
         child: InteractiveViewer(
           panEnabled: false, // Set it to false to prevent panning.
           boundaryMargin: EdgeInsets.all(0),
-
           minScale: 0.1,
           maxScale: 4,
           child: CachedNetworkImage(

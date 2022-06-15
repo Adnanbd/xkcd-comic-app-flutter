@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 
 import 'package:google_fonts/google_fonts.dart';
+import 'package:overlay_support/overlay_support.dart';
 import 'package:provider/provider.dart';
 import 'package:badges/badges.dart';
 import 'package:intl/intl.dart';
+import 'package:xkcd/Controller/Providers/saved_comic_provider.dart';
 
 import 'package:xkcd/Model/all_comic.dart';
 import 'package:xkcd/View/Widgets/custom_image_view.dart';
@@ -12,11 +14,11 @@ import 'package:xkcd/View/Widgets/custom_round_button.dart';
 
 class CustomCardComic extends StatefulWidget {
   AllComic allComic;
- 
+  List<AllComic> savedComic;
 
   CustomCardComic({
     required this.allComic,
-    
+    required this.savedComic,
   });
 
   @override
@@ -32,6 +34,10 @@ class _CustomCardComicState extends State<CustomCardComic> {
   void initState() {
     // TODO: implement initState
     super.initState();
+    setState(() {
+      isFav =
+          widget.savedComic.any((element) => element.id == widget.allComic.id);
+    });
 
    
 
@@ -185,7 +191,25 @@ class _CustomCardComicState extends State<CustomCardComic> {
                       icon: Icons.bookmark,
                       color: isFav ? Colors.red : Colors.black,
                       onTap: () {
-                        
+                        if (isFav) {
+                          context
+                              .read<SavedComicProvider>()
+                              .removeSavedComics(widget.allComic.id);
+                          setState(() {
+                            isFav = !isFav;
+                          });
+                          toast('Removed', duration: Duration(seconds: 1));
+                          print("Removed From Saved Comics");
+                        } else {
+                          context
+                              .read<SavedComicProvider>()
+                              .addSavedComics(widget.allComic);
+                          setState(() {
+                            isFav = !isFav;
+                          });
+                          toast('Saved', duration: Duration(seconds: 1));
+                          print("Added to Saved Comics");
+                        }
                       }),
                   SizedBox(
                     width: 12,

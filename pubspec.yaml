@@ -41,6 +41,8 @@ dependencies:
   intl: ^0.17.0
   full_screen_image_null_safe: ^2.0.0
   cached_network_image: ^3.2.1
+  shared_preferences: ^2.0.15
+  overlay_support: ^2.0.1
 
 dev_dependencies:
   flutter_test:
