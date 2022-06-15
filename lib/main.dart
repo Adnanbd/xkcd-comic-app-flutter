@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+
 import 'package:xkcd/Controller/Providers/all_comic_provider.dart';
 import 'package:xkcd/Controller/Providers/saved_comic_provider.dart';
 import 'package:xkcd/View/Screens/home_screen.dart';

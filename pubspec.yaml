@@ -42,6 +42,7 @@ dependencies:
   full_screen_image_null_safe: ^2.0.0
   cached_network_image: ^3.2.1
   shared_preferences: ^2.0.15
+  anim_search_bar: ^2.0.2
   overlay_support: ^2.0.1
 
 dev_dependencies:
