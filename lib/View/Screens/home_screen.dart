@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 
-import 'package:google_fonts/google_fonts.dart';
+
 import 'package:provider/provider.dart';
 
 import 'package:xkcd/Controller/Providers/all_comic_provider.dart';
-import 'package:xkcd/View/Widgets/custom_card_comic.dart';
+
 import 'package:xkcd/View/Widgets/custom_progress.dart';
 import 'package:xkcd/View/screens/browse_comics_screen.dart';
 
