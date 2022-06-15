@@ -8,6 +8,7 @@ import 'package:intl/intl.dart';
 import 'package:xkcd/Controller/Providers/saved_comic_provider.dart';
 
 import 'package:xkcd/Model/all_comic.dart';
+import 'package:xkcd/View/Screens/explaination_sceen.dart';
 import 'package:xkcd/View/Widgets/custom_image_view.dart';
 import 'package:xkcd/View/Widgets/custom_round_button.dart';
 
@@ -181,7 +182,14 @@ class _CustomCardComicState extends State<CustomCardComic> {
                   CustomRoundButton(
                     icon: Icons.info,
                     onTap: () {
-                      
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => ExplainationScreen(
+                            url: widget.allComic.explainUrl,
+                          ),
+                        ),
+                      );
                     },
                   ),
                   SizedBox(
