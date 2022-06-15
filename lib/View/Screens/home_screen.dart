@@ -6,6 +6,7 @@ import 'package:provider/provider.dart';
 
 import 'package:xkcd/Controller/Providers/all_comic_provider.dart';
 import 'package:xkcd/Controller/Providers/saved_comic_provider.dart';
+import 'package:xkcd/Model/all_comic.dart';
 import 'package:xkcd/View/Widgets/custom_card_comic.dart';
 
 import 'package:xkcd/View/Widgets/custom_progress.dart';
@@ -59,29 +60,7 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
                           allComic: allComic,
                           savedComic: savedComic,
                         ),
-                  Container(
-                    alignment: Alignment.center,
-                    //height: heightMain * .7,
-                    child: savedComic.isEmpty
-                        ? Container(
-                            child: Text(
-                              "No Saved Comics",
-                              style: GoogleFonts.barlow(
-                                  fontWeight: FontWeight.bold,
-                                  color: Colors.black),
-                            ),
-                          )
-                        : ListView.builder(
-                            //itemBuilder: _buildListItem,
-                            itemBuilder: ((p0, index) {
-                              return CustomCardComic(
-                                allComic: savedComic[index],
-                                savedComic: savedComic,
-                              );
-                            }),
-                            itemCount: savedComic.length,
-                          ),
-                  ),
+                  SavedComicScreen(savedComic: savedComic),
                 ],
               ),
       ),
@@ -148,6 +127,42 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
             ),
       backgroundColor: Colors.transparent,
       elevation: 0,
+    );
+  }
+}
+
+class SavedComicScreen extends StatelessWidget {
+  const SavedComicScreen({
+    Key? key,
+    required this.savedComic,
+  }) : super(key: key);
+
+  final List<AllComic> savedComic;
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      alignment: Alignment.center,
+      //height: heightMain * .7,
+      child: savedComic.isEmpty
+          ? Container(
+              child: Text(
+                "No Saved Comics",
+                style: GoogleFonts.barlow(
+                    fontWeight: FontWeight.bold,
+                    color: Colors.black),
+              ),
+            )
+          : ListView.builder(
+              //itemBuilder: _buildListItem,
+              itemBuilder: ((p0, index) {
+                return CustomCardComic(
+                  allComic: savedComic[index],
+                  savedComic: savedComic,
+                );
+              }),
+              itemCount: savedComic.length,
+            ),
     );
   }
 }
