@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import 'package:xkcd/Model/all_comic.dart';
 import 'package:xkcd/View/Widgets/custom_card_comic.dart';
+import 'package:xkcd/View/Widgets/custom_progress.dart';
 
 class BrowseComicScreen extends StatefulWidget {
   List<AllComic> allComic;
@@ -19,7 +20,11 @@ class _BrowseComicScreenState extends State<BrowseComicScreen> {
   @override
   Widget build(BuildContext context) {
     late ScrollController controller;
-    return Container(
+    return  widget.allComic.isEmpty
+                      ? Center(
+                          child: customProgressWidget(),
+                        )
+                      :Container(
       alignment: Alignment.center,
       child: ListView.builder(
         

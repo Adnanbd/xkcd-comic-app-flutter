@@ -1,34 +1,54 @@
-import 'package:anim_search_bar/anim_search_bar.dart';
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
 
+import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
+import 'package:anim_search_bar/anim_search_bar.dart';
 
 import 'package:xkcd/Controller/Providers/all_comic_provider.dart';
 import 'package:xkcd/Controller/Providers/saved_comic_provider.dart';
-import 'package:xkcd/Model/all_comic.dart';
-import 'package:xkcd/View/Widgets/custom_card_comic.dart';
-
+import 'package:xkcd/Controller/Services/shared_pref.dart';
+import 'package:xkcd/View/Screens/saved_comic_screen.dart';
+import 'package:xkcd/View/Screens/searched_comic_screen.dart';
 import 'package:xkcd/View/Widgets/custom_progress.dart';
 import 'package:xkcd/View/screens/browse_comics_screen.dart';
 
 class HomeScreen extends StatefulWidget {
-  HomeScreen({Key? key}) : super(key: key);
+  const HomeScreen({Key? key}) : super(key: key);
 
   @override
   State<HomeScreen> createState() => _HomeScreenState();
 }
 
 class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
+  SharedPref sharedPref = SharedPref();
   TextEditingController textEditingController = TextEditingController();
+
   @override
   void initState() {
     // TODO: implement initState
 
     super.initState();
     Future.delayed(Duration.zero, () {
+      //Fetching All Comics from Base Api ...
       context.read<AllComicProvider>().getAllComic();
+      //Fetching Local Saved Comics ...
       context.read<SavedComicProvider>().getSavedComics();
+
+      //Added a listener to Search Textfield ...
+      textEditingController.addListener(() {
+        if (textEditingController.text.isEmpty) {
+          //Search Mode OFF
+          context.read<AllComicProvider>().setSearchMode(false);
+          context.read<AllComicProvider>().cleanSearchedComic();
+        } else {
+          //Performing search with provided id or name ...
+          context
+              .read<AllComicProvider>()
+              .getSearchedComics(textEditingController.text);
+          //Search Mode ON    
+          context.read<AllComicProvider>().setSearchMode(true);
+        }
+      });
     });
   }
 
@@ -38,37 +58,49 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
     double widthMain = MediaQuery.of(context).size.width;
 
     var isLoading = context.watch<AllComicProvider>().isLoading;
+    var isSearchMode = context.watch<AllComicProvider>().isSearchMode;
+    
+    //All Comics storing here ...
     var allComic = context.watch<AllComicProvider>().allComic;
+    //All Saved Comics storing here ...
     var savedComic = context.watch<SavedComicProvider>().savedComics;
+    //All Searched Comics storing here ...
+    var searchedComic = context.watch<AllComicProvider>().searchedComics;
+
     return Container(
       child: Scaffold(
-        appBar: newMethod(widthMain, tabController),
-        //body: tabBodyBrowse(allComic),
+        appBar: newMethod(widthMain, isSearchMode, tabController),
         body: isLoading
             ? Center(
                 child: customProgressWidget(),
               )
-            : TabBarView(
-                controller: tabController,
-                children: [
-                  //Center(child: Text("data")),
-                  allComic.isEmpty
-                      ? Center(
-                          child: customProgressWidget(),
-                        )
-                      : BrowseComicScreen(
-                          allComic: allComic,
-                          savedComic: savedComic,
-                        ),
-                  SavedComicScreen(savedComic: savedComic),
-                ],
-              ),
+            : isSearchMode
+                ? SearchedComicScreen(
+                    searchedComic: searchedComic,
+                    savedComic: savedComic,
+                  )
+                : 
+                //Main HomeScreen View when no search query is occuring ...
+                TabBarView(
+                    controller: tabController,
+                    children: [
+                      BrowseComicScreen(
+                        allComic: allComic,
+                        savedComic: savedComic,
+                      ),
+                      SavedComicScreen(
+                        savedComic: savedComic,
+                      ),
+                    ],
+                  ),
       ),
     );
   }
 
+
+//Custom AppBar with Tabbar ...
   AppBar newMethod(
-      double widthMain,  TabController tabController) {
+      double widthMain, bool isSearchMode, TabController tabController) {
     return AppBar(
       title: Text(
         "XKCD Comic App".toUpperCase(),
@@ -85,26 +117,34 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
           child: AnimSearchBar(
             closeSearchOnSuffixTap: true,
             helpText: "Enter a comic id or name ..",
-            suffixIcon: Icon(
+            suffixIcon: const Icon(
               Icons.close,
               color: Colors.white,
             ),
             rtl: true,
             width: widthMain * .9,
-            prefixIcon: Icon(
+            textController: textEditingController,
+            prefixIcon: const Icon(
               Icons.search,
               color: Colors.white,
             ),
             color: Colors.black,
-            onSuffixTap: () {},
+            onSuffixTap: () {
+              setState(() {
+                textEditingController.clear();
+              });
+            },
             style: GoogleFonts.barlow(
-                fontWeight: FontWeight.w500, color: Colors.white),
-            textController: textEditingController,
+              fontWeight: FontWeight.w500,
+              color: Colors.white,
+            ),
           ),
         ),
         //SizedBox(width: 10,),
       ],
-      bottom: TabBar(
+      bottom: isSearchMode
+          ? PreferredSize(child: Container(), preferredSize: const Size.fromHeight(0))
+          : TabBar(
               controller: tabController,
               indicatorSize: TabBarIndicatorSize.label,
               indicatorColor: Colors.black,
@@ -127,42 +167,6 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
             ),
       backgroundColor: Colors.transparent,
       elevation: 0,
-    );
-  }
-}
-
-class SavedComicScreen extends StatelessWidget {
-  const SavedComicScreen({
-    Key? key,
-    required this.savedComic,
-  }) : super(key: key);
-
-  final List<AllComic> savedComic;
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      alignment: Alignment.center,
-      //height: heightMain * .7,
-      child: savedComic.isEmpty
-          ? Container(
-              child: Text(
-                "No Saved Comics",
-                style: GoogleFonts.barlow(
-                    fontWeight: FontWeight.bold,
-                    color: Colors.black),
-              ),
-            )
-          : ListView.builder(
-              //itemBuilder: _buildListItem,
-              itemBuilder: ((p0, index) {
-                return CustomCardComic(
-                  allComic: savedComic[index],
-                  savedComic: savedComic,
-                );
-              }),
-              itemCount: savedComic.length,
-            ),
     );
   }
 }
