@@ -8,6 +8,7 @@
 
 - **Coding Style:**  `flutter_lints: ^2.0.0`
 - **Flutter environment:** `sdk: '>=2.18.0-170.0.dev <3.0.0'`
+- **Rest API:** [XKCDY](https://api.xkcdy.com/docs/static/index.html) 
 
 ## 🌈 Features 
 
