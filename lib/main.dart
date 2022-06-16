@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:overlay_support/overlay_support.dart';
 import 'package:provider/provider.dart';
 
 import 'package:xkcd/Controller/Providers/all_comic_provider.dart';
@@ -24,13 +25,15 @@ class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      title: 'XKCD Comic App',
-      theme: ThemeData(
-        primarySwatch: Colors.blue,
+    return OverlaySupport.global(
+      child: MaterialApp(
+        debugShowCheckedModeBanner: false,
+        title: 'XKCD Comic App',
+        theme: ThemeData(
+          primarySwatch: Colors.blue,
+        ),
+        home: HomeScreen(),
       ),
-      home: HomeScreen(),
     );
   }
 }
