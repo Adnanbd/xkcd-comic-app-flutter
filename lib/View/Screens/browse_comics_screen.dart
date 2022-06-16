@@ -5,38 +5,40 @@ import 'package:xkcd/View/Widgets/custom_card_comic.dart';
 import 'package:xkcd/View/Widgets/custom_progress.dart';
 
 class BrowseComicScreen extends StatefulWidget {
-  List<AllComic> allComic;
-  List<AllComic> savedComic;
-  BrowseComicScreen({required this.allComic, required this.savedComic});
+  final List<AllComic> allComic;
+  final List<AllComic> savedComic;
+  const BrowseComicScreen({
+    super.key,
+    required this.allComic,
+    required this.savedComic,
+  });
 
   @override
   State<BrowseComicScreen> createState() => _BrowseComicScreenState();
 }
 
 class _BrowseComicScreenState extends State<BrowseComicScreen> {
-
-  
-
   @override
   Widget build(BuildContext context) {
-    late ScrollController controller;
-    return  widget.allComic.isEmpty
-                      ? Center(
-                          child: customProgressWidget(),
-                        )
-                      :Container(
-      alignment: Alignment.center,
-      child: ListView.builder(
-        
-        itemBuilder: ((p0, index) {
-          return CustomCardComic(
+    return widget.allComic.isEmpty
+        ?
+        //If there is no comic available
+        Center(
+            child: customProgressWidget(),
+          )
+        :
+        //Showing All Comics
+        Container(
+            alignment: Alignment.center,
+            child: ListView.builder(
+              itemBuilder: ((context, index) {
+                return CustomCardComic(
                   allComic: widget.allComic[index],
                   savedComic: widget.savedComic,
                 );
-        }),
-        itemCount: widget.allComic.length,
-      ),
-    );
+              }),
+              itemCount: widget.allComic.length,
+            ),
+          );
   }
-
 }

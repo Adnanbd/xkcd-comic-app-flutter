@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+
 import 'package:xkcd/Controller/Services/api_client.dart';
 import 'package:xkcd/Model/all_comic.dart';
 
@@ -30,7 +31,7 @@ class AllComicProvider with ChangeNotifier {
     _isSearchMode = search;
     notifyListeners();
   }
-
+// This function returned ALL available comics
   void getAllComic() {
     setLoading(true);
     apiClient.fetchAllComic(0).then((value) {
@@ -43,11 +44,12 @@ class AllComicProvider with ChangeNotifier {
 
   
 
- 
+ // This function returned the comics that matched with search query
   void getSearchedComics(String enteredKeyword) {
     setLoading(true);
     List<AllComic> results = [];
     List<AllComic> tempList = [];
+    // If user type any comic number
     if (isNumeric(enteredKeyword)) {
       int temp = int.parse(enteredKeyword);
       results = _allComic.where((comic) => comic.id == temp).toList();
@@ -56,7 +58,9 @@ class AllComicProvider with ChangeNotifier {
               comic.title.toLowerCase().contains(enteredKeyword.toLowerCase()))
           .toList();
       results = results + tempList;
-    } else {
+    } 
+    // If user type any comic name/title
+    else {
       results = _allComic
           .where((comic) =>
               comic.title.toLowerCase().contains(enteredKeyword.toLowerCase()))
@@ -67,7 +71,7 @@ class AllComicProvider with ChangeNotifier {
     setLoading(false);
     notifyListeners();
   }
-
+// Clean the Searched Comic List for next search
   void cleanSearchedComic() {
     _searchedComics = [];
     notifyListeners();

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+
 import 'package:xkcd/Controller/Services/shared_pref.dart';
 import 'package:xkcd/Model/all_comic.dart';
 
@@ -20,7 +21,7 @@ class SavedComicProvider extends ChangeNotifier {
     _isLoading = loading;
     notifyListeners();
   }
-
+// Get Comic list those were already saved
   void getSavedComics() {
     setLoading(true);
 
@@ -32,7 +33,7 @@ class SavedComicProvider extends ChangeNotifier {
 
     notifyListeners();
   }
-
+// Remove comics from Saved Comic List
   void removeSavedComics(int index) {
     setLoading(true);
 
@@ -45,13 +46,11 @@ class SavedComicProvider extends ChangeNotifier {
 
     notifyListeners();
   }
-
+// Add a new comic to Saved Comic List
   void addSavedComics(AllComic comic) {
     setLoading(true);
 
     _savedComics.insert(0, comic);
-    //_savedComics = _savedComics.reversed.toList();
-
     sharedPref.addFavComic(_savedComics).then((_) {
       setLoading(false);
     });

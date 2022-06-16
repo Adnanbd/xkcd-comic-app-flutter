@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+
 import 'package:google_fonts/google_fonts.dart';
+
 import 'package:xkcd/Model/all_comic.dart';
 import 'package:xkcd/View/Widgets/custom_card_comic_expandable.dart';
 
@@ -16,6 +18,7 @@ class SearchedComicScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return searchedComic.isEmpty
+    // If no query match with available comics
         ? Center(
             child: Text(
               "Sorry! No Comics Found!",
@@ -23,12 +26,12 @@ class SearchedComicScreen extends StatelessWidget {
                   fontWeight: FontWeight.bold, color: Colors.black),
             ),
           )
-        : Container(
+        : 
+        //Showing a list of searched comics
+        Container(
             alignment: Alignment.center,
-            //height: heightMain * .7,
             child: ListView.builder(
-              //itemBuilder: _buildListItem,
-              itemBuilder: ((p0, index) {
+              itemBuilder: ((context, index) {
                 return CustomCardComicExpandable(
                   allComic: searchedComic[index],
                   savedComic: savedComic,

@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
+
 import 'package:google_fonts/google_fonts.dart';
+
 import 'package:xkcd/Model/all_comic.dart';
 import 'package:xkcd/View/Widgets/custom_card_comic_expandable.dart';
-
 
 class SavedComicScreen extends StatefulWidget {
   const SavedComicScreen({
@@ -21,26 +22,27 @@ class _SavedComicScreenState extends State<SavedComicScreen> {
   Widget build(BuildContext context) {
     return Container(
       alignment: Alignment.center,
-      //height: heightMain * .7,
-      child: widget.savedComic.isEmpty
-          ? Container(
-              child: Text(
-                "No Saved Comics",
-                style: GoogleFonts.barlow(
+      child:
+          //When initially no saved comic
+          widget.savedComic.isEmpty
+              ? Text(
+                  "No Saved Comics",
+                  style: GoogleFonts.barlow(
                     fontWeight: FontWeight.bold,
-                    color: Colors.black),
-              ),
-            )
-          : ListView.builder(
-              //itemBuilder: _buildListItem,
-              itemBuilder: ((p0, index) {
-                return CustomCardComicExpandable(
-                  allComic: widget.savedComic[index],
-                  savedComic: widget.savedComic,
-                );
-              }),
-              itemCount: widget.savedComic.length,
-            ),
+                    color: Colors.black,
+                  ),
+                )
+              :
+              //Showing a list of saved comics
+              ListView.builder(
+                  itemBuilder: ((context, index) {
+                    return CustomCardComicExpandable(
+                      allComic: widget.savedComic[index],
+                      savedComic: widget.savedComic,
+                    );
+                  }),
+                  itemCount: widget.savedComic.length,
+                ),
     );
   }
 }

@@ -25,9 +25,8 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
 
   @override
   void initState() {
-    // TODO: implement initState
-
     super.initState();
+
     Future.delayed(Duration.zero, () {
       //Fetching All Comics from Base Api ...
       context.read<AllComicProvider>().getAllComic();
@@ -45,7 +44,7 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
           context
               .read<AllComicProvider>()
               .getSearchedComics(textEditingController.text);
-          //Search Mode ON    
+          //Search Mode ON
           context.read<AllComicProvider>().setSearchMode(true);
         }
       });
@@ -59,7 +58,7 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
 
     var isLoading = context.watch<AllComicProvider>().isLoading;
     var isSearchMode = context.watch<AllComicProvider>().isSearchMode;
-    
+
     //All Comics storing here ...
     var allComic = context.watch<AllComicProvider>().allComic;
     //All Saved Comics storing here ...
@@ -67,47 +66,45 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
     //All Searched Comics storing here ...
     var searchedComic = context.watch<AllComicProvider>().searchedComics;
 
-    return Container(
-      child: Scaffold(
-        appBar: newMethod(widthMain, isSearchMode, tabController),
-        body: isLoading
-            ? Center(
-                child: customProgressWidget(),
-              )
-            : isSearchMode
-                ? SearchedComicScreen(
-                    searchedComic: searchedComic,
-                    savedComic: savedComic,
-                  )
-                : 
-                //Main HomeScreen View when no search query is occuring ...
-                TabBarView(
-                    controller: tabController,
-                    children: [
-                      BrowseComicScreen(
-                        allComic: allComic,
-                        savedComic: savedComic,
-                      ),
-                      SavedComicScreen(
-                        savedComic: savedComic,
-                      ),
-                    ],
-                  ),
-      ),
+    return Scaffold(
+      appBar: newMethod(widthMain, isSearchMode, tabController),
+      body: isLoading
+          ? Center(
+              child: customProgressWidget(),
+            )
+          : isSearchMode
+              ? SearchedComicScreen(
+                  searchedComic: searchedComic,
+                  savedComic: savedComic,
+                )
+              :
+              //Main HomeScreen View when no search query is occuring ...
+              TabBarView(
+                  controller: tabController,
+                  children: [
+                    BrowseComicScreen(
+                      allComic: allComic,
+                      savedComic: savedComic,
+                    ),
+                    SavedComicScreen(
+                      savedComic: savedComic,
+                    ),
+                  ],
+                ),
     );
   }
-
 
 //Custom AppBar with Tabbar ...
   AppBar newMethod(
       double widthMain, bool isSearchMode, TabController tabController) {
     return AppBar(
+      //AppBar Heading
       title: Text(
         "XKCD Comic App".toUpperCase(),
         style: GoogleFonts.barlow(
             fontWeight: FontWeight.bold, color: Colors.black),
       ),
-      centerTitle: true,
+      centerTitle: true, //Make the title centered
       actions: [
         Container(
           alignment: Alignment.center,
@@ -115,6 +112,7 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
             right: 20,
           ),
           child: AnimSearchBar(
+            //Custom Search Bar
             closeSearchOnSuffixTap: true,
             helpText: "Enter a comic id or name ..",
             suffixIcon: const Icon(
@@ -140,11 +138,17 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
             ),
           ),
         ),
-        //SizedBox(width: 10,),
       ],
       bottom: isSearchMode
-          ? PreferredSize(child: Container(), preferredSize: const Size.fromHeight(0))
-          : TabBar(
+          ?
+          //When Search Mode in on, then no tabbar is needed to show
+          PreferredSize(
+              preferredSize: const Size.fromHeight(0),
+              child: Container(),
+            )
+          :
+          //Tababr for easy navigation with swipe
+          TabBar(
               controller: tabController,
               indicatorSize: TabBarIndicatorSize.label,
               indicatorColor: Colors.black,

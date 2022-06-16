@@ -3,13 +3,15 @@ import 'dart:convert';
 
 import 'package:xkcd/Model/all_comic.dart';
 
+// This class is using for saving and retrieving comics locally
 class SharedPref {
   
+  // Saving Updated Saved Comic list 
   Future<void> addFavComic(List<AllComic> cList) async {
     final prefs = await SharedPreferences.getInstance();
     prefs.setString('savedComics', jsonEncode(cList));
   }
-
+  //Get saved comics
   Future<List<AllComic>> getFavComic() async {
     List<AllComic> list = [];
     final prefs = await SharedPreferences.getInstance();
@@ -25,18 +27,7 @@ class SharedPref {
     return list;
   }
 
-  Future<bool> checkIsFav(int index) async {
-    bool isFav = false;
-    List<AllComic> list = [];
-    getFavComic().then((value) => list = value);
-
-    isFav = list.any((element) {
-      return element.id == index;
-    });
-
-    return isFav;
-  }
-
+  // Removing comic from saved comic list
   Future<void> removeFavComic(int index) async {
     final prefs = await SharedPreferences.getInstance();
     List<AllComic> list = [];
