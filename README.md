@@ -9,6 +9,17 @@
 - **Coding Style:**  `flutter_lints: ^2.0.0`
 - **Flutter environment:** `sdk: '>=2.18.0-170.0.dev <3.0.0'`
 
+## 🌈 Features 
+
+- **Browse through the comics**
+- **See the comic details, including its description**
+- **Search for comics by the comic number as well as text**
+- **Get the comic explanation**
+- **Favorite the comics, which would be available offline too**
+- **Send comics to others**
+- <strike> Get notifications when a new comic is published</strike>
+- <strike> Support multiple form factors</strike>
+
 
 ## 📱 Screenshots 
 
